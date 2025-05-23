@@ -1,0 +1,26 @@
+version: '3'
+
+tasks:
+  build:
+    dir: cmd/gophermart
+    cmds:
+      - go build -o gophermart.exe
+  
+  start-app:
+    dir: cmd/gophermart
+    cmds:
+      - go run main.go {{.CLI_ARGS}}
+
+  vet:
+    cmds:
+      - go vet -vettool=statictest ./...
+  
+  test:
+    cmds:
+      - go test -v -count=1 ./...
+
+  cover:
+    cmds:
+      - go test -count=1 -coverprofile=cover.out ./...
+      - go tool cover -html=cover.out
+      - '{{if eq .OS "Windows_NT"}}powershell{{end}} rm cover.out'
